@@ -1,0 +1,4 @@
+/home/gunnar/ManchesterTriageApp/android/app/.cxx/RelWithDebInfo/365k4j4x/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/foo.dir
+/home/gunnar/ManchesterTriageApp/android/app/.cxx/RelWithDebInfo/365k4j4x/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/boo.dir
+/home/gunnar/ManchesterTriageApp/android/app/.cxx/RelWithDebInfo/365k4j4x/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/edit_cache.dir
+/home/gunnar/ManchesterTriageApp/android/app/.cxx/RelWithDebInfo/365k4j4x/x86_64/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/rebuild_cache.dir

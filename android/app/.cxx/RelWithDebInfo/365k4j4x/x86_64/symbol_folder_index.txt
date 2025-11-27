@@ -1,0 +1,1 @@
+/home/gunnar/ManchesterTriageApp/android/app/build/intermediates/cxx/RelWithDebInfo/365k4j4x/obj/x86_64

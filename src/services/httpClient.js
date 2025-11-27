@@ -1,0 +1,90 @@
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
+import { emit } from './events';
+import { STORAGE_KEYS } from '../config/storageKeys';
+import { CONFIGURACAO_API } from '../config/ConfiguracaoAPI';
+
+const apiUrlFromConfig = Constants?.expoConfig?.extra?.API_URL;
+const baseURL = apiUrlFromConfig || CONFIGURACAO_API.URL_BASE;
+
+// Log da URL base para debug
+console.log('🔗 URL Base da API:', baseURL);
+console.log('🔗 URL do Expo Config:', apiUrlFromConfig);
+console.log('🔗 URL Fallback:', CONFIGURACAO_API.URL_BASE);
+
+const httpClient = axios.create({
+  baseURL,
+  timeout: CONFIGURACAO_API.TIMEOUT,
+  headers: CONFIGURACAO_API.HEADERS_PADRAO,
+  // Configurações adicionais para conexões HTTP
+  validateStatus: function (status) {
+    return status >= 200 && status < 600; // Aceitar todos os status codes para melhor debug
+  },
+});
+
+httpClient.interceptors.request.use(
+  async (config) => {
+    try {
+      const token = await AsyncStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      // Log da requisição para debug
+      console.log('📤 Requisição:', config.method?.toUpperCase(), config.baseURL + config.url);
+    } catch (_e) {
+      // silencioso
+    }
+    return config;
+  },
+  (error) => {
+    console.error('❌ Erro na requisição:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Evitar loop de 401 (login/logout) e múltiplos disparos
+let isHandlingUnauthorized = false;
+httpClient.interceptors.response.use(
+  (response) => {
+    console.log('✅ Resposta:', response.status, response.config.url);
+    return response;
+  },
+  async (error) => {
+    const status = error?.response?.status;
+    const url = error?.config?.url || '';
+    const fullUrl = error?.config?.baseURL + url;
+    
+    // Log detalhado do erro
+    if (error.response) {
+      console.error('❌ Erro HTTP:', status, fullUrl, error.response.data);
+    } else if (error.request) {
+      console.error('❌ Sem resposta do servidor:', fullUrl, error.message);
+    } else {
+      console.error('❌ Erro na configuração da requisição:', error.message);
+    }
+    
+    if (status === 401) {
+      // Ignorar 401 de login/logout e quando já estamos tratando
+      const isAuthEndpoint =
+        url.includes('/login') ||
+        url.includes('/logout');
+      if (!isAuthEndpoint && !isHandlingUnauthorized) {
+        isHandlingUnauthorized = true;
+        emit('auth:unauthorized', { reason: 'token_invalid_or_expired' });
+        // pequena janela para evitar múltiplos eventos
+        setTimeout(() => {
+          isHandlingUnauthorized = false;
+        }, 1000);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default httpClient;
+
+
+
+
+

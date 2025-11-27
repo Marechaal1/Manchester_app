@@ -1,0 +1,39 @@
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: manchester-triage-builder:latest
+    container_name: manchester-triage-builder
+    volumes:
+      # Montar o projeto atual
+      - .:/app
+      # Cache do npm (opcional, melhora performance)
+      - npm-cache:/root/.npm
+      # Cache do Gradle (opcional, melhora performance)
+      - gradle-cache:/root/.gradle
+      # Cache do Android SDK (opcional, mas pode ser grande)
+      # Descomente se quiser persistir o SDK entre builds
+      # - android-sdk-cache:/opt/android-sdk
+    working_dir: /app
+    environment:
+      - ANDROID_HOME=/opt/android-sdk
+      - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - NODE_ENV=production
+    # Para builds que precisam de mais memória (aumentado para evitar crash do Gradle)
+    mem_limit: 6g
+    memswap_limit: 6g
+    # Para builds que precisam de mais CPU
+    cpus: '2.0'
+    # Manter container rodando para comandos interativos
+    stdin_open: true
+    tty: true
+
+volumes:
+  npm-cache:
+    driver: local
+  gradle-cache:
+    driver: local
+  # android-sdk-cache:
+  #   driver: local
+

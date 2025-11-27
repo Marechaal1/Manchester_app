@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Manchester Triage App",
+    "slug": "manchester-triage-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#2E86AB"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "softwareKeyboardLayoutMode": "resize",
+      "windowSoftInputMode": "adjustResize|stateHidden",
+      "icon": "./assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#2E86AB"
+      },
+      "package": "com.gunnarv.manchestertriageapp"
+    },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#2E86AB"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+      "extra": {
+        "API_URL": "http://192.168.0.102:8080/api"
+      },
+    "sdkVersion": "54.0.0",
+    "plugins": [
+      "expo-font"
+    ]
+  }
+}
