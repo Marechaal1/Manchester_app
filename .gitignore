@@ -22,6 +22,7 @@ project.xcworkspace
 
 # Android/IntelliJ
 build/
+**/build/
 .idea
 .gradle
 local.properties
@@ -29,6 +30,9 @@ local.properties
 *.hprof
 .cxx/
 .kotlin/
+*.apk
+*.aab
+*.so
 
 # node.js
 node_modules/
