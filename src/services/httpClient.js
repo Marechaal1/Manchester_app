@@ -1,16 +1,22 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
 import { emit } from './events';
 import { STORAGE_KEYS } from '../config/storageKeys';
-import { CONFIGURACAO_API } from '../config/ConfiguracaoAPI';
+import { CONFIGURACAO_API, obterUrlBaseAPI } from '../config/ConfiguracaoAPI';
 
-const apiUrlFromConfig = Constants?.expoConfig?.extra?.API_URL;
-const baseURL = apiUrlFromConfig || CONFIGURACAO_API.URL_BASE;
+const baseURL = obterUrlBaseAPI();
+
+// Helper para unir baseURL e path com exatamente uma barra
+const joinUrl = (base, path) => {
+  const safeBase = String(base || '').replace(/\/+$/, '');
+  const safePath = String(path || '').replace(/^\/+/, '');
+  if (!safeBase) return `/${safePath}`;
+  if (!safePath) return safeBase;
+  return `${safeBase}/${safePath}`;
+};
 
 // Log da URL base para debug
 console.log('🔗 URL Base da API:', baseURL);
-console.log('🔗 URL do Expo Config:', apiUrlFromConfig);
 console.log('🔗 URL Fallback:', CONFIGURACAO_API.URL_BASE);
 
 const httpClient = axios.create({
@@ -30,8 +36,13 @@ httpClient.interceptors.request.use(
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+      // Normalizar URL: se não for absoluta, remove barras iniciais para permitir join correto
+      const isAbsoluteUrl = typeof config.url === 'string' && /^https?:\/\//i.test(config.url);
+      if (!isAbsoluteUrl && typeof config.url === 'string') {
+        config.url = config.url.replace(/^\/+/, '');
+      }
       // Log da requisição para debug
-      console.log('📤 Requisição:', config.method?.toUpperCase(), config.baseURL + config.url);
+      console.log('📤 Requisição:', config.method?.toUpperCase(), joinUrl(config.baseURL, config.url));
     } catch (_e) {
       // silencioso
     }

@@ -37,3 +37,7 @@ expoAutolinking.useExpoVersionCatalog()
 
 include ':app'
 includeBuild(expoAutolinking.reactNativeGradlePlugin)
+
+// Link explícito do módulo react-native-worklets para satisfazer dependência do Reanimated
+include ':react-native-worklets'
+project(':react-native-worklets').projectDir = new File(rootDir, '../node_modules/react-native-worklets/android')

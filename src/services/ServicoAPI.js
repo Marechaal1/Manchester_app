@@ -9,7 +9,10 @@ export const servicoAutenticacao = {
   async fazerLogin(email, senha) {
     try {
       console.log('🔐 Tentando fazer login com:', email);
-      console.log('🔗 URL completa será:', httpClient.defaults.baseURL + '/login');
+      // Mostrar URL completa de forma correta
+      const base = String(httpClient.defaults.baseURL || '').replace(/\/+$/, '');
+      const full = `${base}/login`;
+      console.log('🔗 URL completa será:', full);
       
       const resposta = await httpClient.post('/login', { email, password: senha });
       console.log('✅ Login bem-sucedido:', resposta.data);
@@ -39,8 +42,10 @@ export const servicoAutenticacao = {
         throw new Error(mensagem);
       } else if (erro.request) {
         // Requisição feita mas sem resposta - problema de rede
-        const url = erro.config?.baseURL + erro.config?.url || 'servidor';
-        throw new Error(`Não foi possível conectar ao servidor (${url}). Verifique:\n1. Se o backend está rodando em http://192.168.0.102:8000\n2. Se você está na mesma rede Wi-Fi\n3. Se o firewall permite conexões na porta 8000`);
+        const base = String(erro.config?.baseURL || '').replace(/\/+$/, '');
+        const path = String(erro.config?.url || '').replace(/^\/+/, '');
+        const url = base && path ? `${base}/${path}` : (base || path || 'servidor');
+        throw new Error(`Não foi possível conectar ao servidor (${url}). Verifique:\n1. Se o backend está rodando em http://172.16.49.67:8080\n2. Se o celular está na MESMA rede Wi‑Fi do servidor\n3. Se o firewall permite conexões na porta 8080 e o serviço escuta em 0.0.0.0`);
       } else if (erro.code === 'NETWORK_ERROR' || erro.code === 'ECONNREFUSED' || erro.code === 'ETIMEDOUT' || erro.message?.includes('Network') || erro.message?.includes('timeout') || erro.message?.includes('ECONNREFUSED')) {
         throw new Error(`Erro de conexão de rede. Código: ${erro.code || 'N/A'}\nVerifique sua conexão Wi-Fi e se o backend está acessível.`);
       } else {
@@ -236,6 +241,18 @@ export const servicoTriagem = {
       console.error('❌ Status:', erro.response?.status);
       console.error('❌ Erros de validação:', erro.response?.data?.erros);
       throw new Error(erro.response?.data?.mensagem || 'Erro ao registrar reavaliação');
+    }
+  },
+  
+  async concluirTriagem(id) {
+    try {
+      console.log('🔍 Concluindo triagem:', id);
+      const resposta = await httpClient.put(`/triagens/${String(id)}/concluir`);
+      console.log('✅ Triagem concluída:', resposta.data);
+      return resposta.data;
+    } catch (erro) {
+      console.error('❌ Erro ao concluir triagem:', erro.response?.data || erro.message);
+      throw new Error(erro.response?.data?.mensagem || 'Erro ao concluir triagem');
     }
   },
 };

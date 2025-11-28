@@ -52,7 +52,7 @@ const TelaLogin = () => {
         // Requisição foi feita mas não houve resposta
         mensagemErro = 'Não foi possível conectar ao servidor. Verifique sua conexão de rede e se o backend está rodando.';
       } else if (erro.code === 'NETWORK_ERROR' || erro.message?.includes('Network')) {
-        mensagemErro = 'Erro de rede. Verifique sua conexão Wi-Fi e se o backend está acessível em http://192.168.0.102:8000';
+        mensagemErro = 'Erro de rede. Verifique sua conexão Wi-Fi e se o backend está acessível ';
       }
       
       Alert.alert('Erro no Login', mensagemErro);

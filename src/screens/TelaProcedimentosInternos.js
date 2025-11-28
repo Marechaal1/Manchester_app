@@ -115,14 +115,17 @@ const InternalProceduresScreen = ({ navigation }) => {
       }
       
       // Concluir triagem no backend (só se não estiver já concluída)
-      if (patient?.id) {
-        console.log('🔄 Verificando status da triagem:', patient.id);
+      const triagemId = patient?.idTriagem || patient?.id;
+      if (triagemId) {
+        console.log('🔄 Verificando status da triagem:', triagemId);
         try {
-          await triagemService.concluirTriagem(patient.id);
+          await triagemService.concluirTriagem(triagemId);
           console.log('✅ Triagem concluída');
         } catch (triagemError) {
           console.log('ℹ️ Triagem já estava concluída ou erro:', triagemError.message);
         }
+      } else {
+        console.log('⚠️ Sem triagemId para concluir. Dados do paciente:', patient?.tagId || patient?.name || 'desconhecido');
       }
       
       // Recarregar dados do backend para atualizar a lista
