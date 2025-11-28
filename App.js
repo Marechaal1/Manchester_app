@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import NavegadorApp from './src/navigation/NavegadorApp';
+import NavegadorApp from './src/navigation/NavegadorApp.js';
 import { ProvedorPaciente } from './src/context/ContextoPaciente';
 import { ProvedorConfiguracaoReavaliacao } from './src/context/ContextoConfiguracaoReavaliacao';
 import { ProvedorAutenticacao, usarAutenticacao } from './src/context/ContextoAutenticacao';
