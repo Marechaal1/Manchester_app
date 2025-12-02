@@ -17,7 +17,6 @@
     },
     "android": {
       "softwareKeyboardLayoutMode": "resize",
-      "windowSoftInputMode": "adjustResize|stateHidden",
       "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
@@ -33,8 +32,8 @@
       "bundler": "metro"
     },
       "extra": {
-        "API_HOST": "172.16.50.226",
-        "API_URL": "http://172.16.50.226:8080/api"
+        "API_HOST": "10.160.163.40",
+        "API_URL": "http://10.160.163.40:8080/api"
       },
     "sdkVersion": "54.0.0",
     "plugins": [
